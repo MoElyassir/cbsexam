@@ -1,5 +1,7 @@
 package model;
 
+import utils.Hashing;
+
 public class User {
 
   public int id;
@@ -54,7 +56,8 @@ public class User {
   }
 
   public void setPassword(String password) {
-    this.password = password;
+    Hashing hashing = new Hashing();
+    this.password = hashing.sha(password, );
   }
 
   public long getCreatedTime() {
