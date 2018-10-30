@@ -5,6 +5,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+
+import model.User;
 import org.bouncycastle.util.encoders.Hex;
 
 
@@ -47,7 +49,7 @@ public final class Hashing {
     }
 
 
-    // TODO: You should add a salt and make this secure
+    // TODO: You should add a salt and make this secure - FIX
     /*public static String sha(String rawString, byte salt) {
         try {
             // We load the hashing algoritm we wish to use.
@@ -81,7 +83,8 @@ public final class Hashing {
             // We load the hashing algoritm we wish to use.
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
-            rawString = rawString + "oiehrgoiherg";
+
+            rawString = rawString + User.getCreatedTime();
 
             // We convert to byte array
             byte[] hash = digest.digest(rawString.getBytes(StandardCharsets.UTF_8));
@@ -99,7 +102,7 @@ public final class Hashing {
         return rawString;
     }
 
-    private static byte[] getSalt() throws NoSuchAlgorithmException, NoSuchProviderException {
+/*    private static byte[] getSalt() throws NoSuchAlgorithmException, NoSuchProviderException {
 
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
 
@@ -110,6 +113,6 @@ public final class Hashing {
         salt.toString();
 
         return salt;
-    }
+    }*/
 
 }

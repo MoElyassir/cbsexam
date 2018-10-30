@@ -9,7 +9,7 @@ public class User {
   public String lastname;
   public String email;
   private String password;
-  private long createdTime;
+  public static long createdTime;
 
   public User(int id, String firstname, String lastname, String password, String email) {
     this.id = id;
@@ -59,7 +59,7 @@ public class User {
     this.password = Hashing.sha(password);
   }
 
-  public long getCreatedTime() {
+  public static long getCreatedTime() {
     return createdTime;
   }
 
