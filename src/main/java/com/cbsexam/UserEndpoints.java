@@ -65,6 +65,7 @@ public class UserEndpoints {
 
     // Read the json from body and transfer it to a user class
     User newUser = new Gson().fromJson(body, User.class);
+    newUser.setPassword(newUser.getPassword());
 
     // Use the controller to add the user
     User createUser = UserController.createUser(newUser);

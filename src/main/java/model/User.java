@@ -56,8 +56,7 @@ public class User {
   }
 
   public void setPassword(String password) {
-    Hashing hashing = new Hashing();
-    this.password = hashing.sha(password, );
+    this.password = Hashing.sha(password);
   }
 
   public long getCreatedTime() {

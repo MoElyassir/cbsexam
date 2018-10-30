@@ -5,13 +5,16 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-
 import org.bouncycastle.util.encoders.Hex;
+
 
 public final class Hashing {
 
 
+
+
     // TODO: You should add a salt and make this secure
+    // remove as md5 is not secure
     public static String md5(String rawString, byte[] salt) {
         try {
 
@@ -45,12 +48,40 @@ public final class Hashing {
 
 
     // TODO: You should add a salt and make this secure
-    public static String sha(String rawString, byte salt) {
+    /*public static String sha(String rawString, byte salt) {
         try {
             // We load the hashing algoritm we wish to use.
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
             digest.update(salt);
+
+            return digest.digest();
+            // We convert to byte array
+            byte[] hash = digest.digest(rawString.getBytes(StandardCharsets.UTF_8));
+
+            StringBuffer sha256hex = new StringBuffer();
+
+            for (int i = 0; i < hash.length; i++){
+                String sbHash = Integer.toHexString( hash[i] & 0xff);
+                if(sbHash.length() == '1') sha256hex.append('0');
+                sha256hex.append(sbHash);
+            }
+
+            // And return the string
+            return sha256hex.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return rawString;
+    }*/
+    public static String sha(String rawString) {
+        try {
+            // We load the hashing algoritm we wish to use.
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            rawString = rawString + "oiehrgoiherg";
 
             // We convert to byte array
             byte[] hash = digest.digest(rawString.getBytes(StandardCharsets.UTF_8));
@@ -70,14 +101,15 @@ public final class Hashing {
 
     private static byte[] getSalt() throws NoSuchAlgorithmException, NoSuchProviderException {
 
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
 
         byte[] salt = new byte[17];
 
-        sr.nextBytes(salt);
+        random.nextBytes(salt);
 
         salt.toString();
 
         return salt;
     }
+
 }
