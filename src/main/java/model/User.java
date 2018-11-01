@@ -9,7 +9,9 @@ public class User {
   public String lastname;
   public String email;
   private String password;
-  public static long createdTime;
+
+  // Changed createdTime to static so it can be used as a salt to hash the password
+  private static long createdTime;
 
   public User(int id, String firstname, String lastname, String password, String email) {
     this.id = id;
@@ -56,7 +58,7 @@ public class User {
   }
 
   public void setPassword(String password) {
-    this.password = Hashing.sha(password);
+    this.password = password;
   }
 
   public static long getCreatedTime() {

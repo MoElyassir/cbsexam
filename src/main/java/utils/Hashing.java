@@ -50,69 +50,36 @@ public final class Hashing {
 
 
     // TODO: You should add a salt and make this secure - FIX
-    /*public static String sha(String rawString, byte salt) {
-        try {
-            // We load the hashing algoritm we wish to use.
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-
-            digest.update(salt);
-
-            return digest.digest();
-            // We convert to byte array
-            byte[] hash = digest.digest(rawString.getBytes(StandardCharsets.UTF_8));
-
-            StringBuffer sha256hex = new StringBuffer();
-
-            for (int i = 0; i < hash.length; i++){
-                String sbHash = Integer.toHexString( hash[i] & 0xff);
-                if(sbHash.length() == '1') sha256hex.append('0');
-                sha256hex.append(sbHash);
-            }
-
-            // And return the string
-            return sha256hex.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        return rawString;
-    }*/
+    
     public static String sha(String rawString) {
-        try {
-            // We load the hashing algoritm we wish to use.
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        if (rawString == "null") {
+            return "null";
+            } else
+                try {
+                    // We load the hashing algoritm we wish to use.
+                    MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
+                    // Adding the createdTime will give each password a unique hash even if different users have the same password
+                    // Problem with start data with the same password as createdTime is the same
+                    rawString = rawString + User.getCreatedTime();
 
-            rawString = rawString + User.getCreatedTime();
+                    // We convert to byte array
+                    byte[] hash = digest.digest(rawString.getBytes(StandardCharsets.UTF_8));
 
-            // We convert to byte array
-            byte[] hash = digest.digest(rawString.getBytes(StandardCharsets.UTF_8));
+                    // We create the hashed string
+                    String sha256hex = new String(Hex.encode(hash));
 
-            // We create the hashed string
-            String sha256hex = new String(Hex.encode(hash));
+                    // And return the string
+                    return sha256hex;
 
-            // And return the string
-            return sha256hex;
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+                } return rawString;
         }
 
-        return rawString;
+
     }
 
-/*    private static byte[] getSalt() throws NoSuchAlgorithmException, NoSuchProviderException {
 
-        SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
 
-        byte[] salt = new byte[17];
-
-        random.nextBytes(salt);
-
-        salt.toString();
-
-        return salt;
-    }*/
-
-}
