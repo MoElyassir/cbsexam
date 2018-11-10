@@ -13,12 +13,13 @@ public class User {
   // Changed createdTime to static so it can be used as a salt to hash the password
   private static long createdTime;
 
-  public User(int id, String firstname, String lastname, String password, String email) {
+  public User(int id, String firstname, String lastname, String password, String email, long createdTime) {
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
-    this.password = password;
+    this.password = Hashing.sha(password);
     this.email = email;
+    this.createdTime = createdTime;
   }
 
   public int getId() {
@@ -58,7 +59,7 @@ public class User {
   }
 
   public void setPassword(String password) {
-    this.password = password;
+    this.password = Hashing.sha(password);
   }
 
   public static long getCreatedTime() {

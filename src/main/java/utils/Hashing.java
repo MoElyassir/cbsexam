@@ -50,7 +50,7 @@ public final class Hashing {
 
 
     // TODO: You should add a salt and make this secure - FIX
-    
+
     public static String sha(String rawString) {
         if (rawString == "null") {
             return "null";
@@ -61,6 +61,7 @@ public final class Hashing {
 
                     // Adding the createdTime will give each password a unique hash even if different users have the same password
                     // Problem with start data with the same password as createdTime is the same
+
                     rawString = rawString + User.getCreatedTime();
 
                     // We convert to byte array
