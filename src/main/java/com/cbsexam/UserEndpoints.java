@@ -94,7 +94,7 @@ public class UserEndpoints {
     String token = UserController.checkUser(user);
 
     try{
-      if (token == null){
+      if (token != null){
         // Return a response with status 200 and JSON as type
         return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(token).build();
       }else {

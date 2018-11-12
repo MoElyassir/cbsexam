@@ -111,7 +111,6 @@ public class UserController {
 
 
 
-  // REMEMBER!! - Check again for improvements
   public static User createUser(User user) {
 
     // Write in log that we've reach this step
@@ -151,6 +150,7 @@ public class UserController {
     return user;
   }
 
+    // REMEMBER!! - Check again for improvements (Will not block an uncreated user from login - check again!!!)
   public static String checkUser (User user){
 
       // Check for connection
@@ -159,7 +159,7 @@ public class UserController {
       }
 
       // Build the query for DB - can now take stored passwords which are hashed and start data which aren't hashed
-      String sql = "SELECT email, password FROM cbsexam.user where email ='" + user.getEmail() + "' AND (password = '" + Hashing.sha(user.getPassword()) + "' OR password = '" + user.getPassword() + "')";
+      String sql = "SELECT * FROM cbsexam.user where email ='" + user.getEmail() + "' AND (password = '" + Hashing.sha(user.getPassword()) + "' OR password = '" + user.getPassword() + "')";
 
       // Actually do the query
       ResultSet rs = dbCon.query(sql);
@@ -169,7 +169,7 @@ public class UserController {
           // Get first object, since we only have one
           if (rs.next()) {
 
-              user = new User(
+              loginUser = new User(
                       rs.getInt("id"),
                       rs.getString("first_name"),
                       rs.getString("last_name"),
@@ -177,11 +177,13 @@ public class UserController {
                       rs.getString("email"),
                       rs.getLong("created_at"));
 
+
               try {
                   // Creating and signing the token - Consider if the RSA is more secure to use as it is asymetric and has different keys
                   Algorithm algorithm = Algorithm.HMAC256("secret");
                   String token = JWT.create()
                           .withIssuer("auth0")
+                          .withClaim("userId", loginUser.id)
                           .sign(algorithm);
               } catch (JWTCreationException exception){
                   //Invalid Signing configuration / Couldn't convert Claims.
