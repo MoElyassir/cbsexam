@@ -158,8 +158,8 @@ public class UserController {
           dbCon = new DatabaseController();
       }
 
-      // Build the query for DB - check if we are double hashing here
-      String sql = "SELECT email, password FROM cbsexam.user where email =" + user.getEmail() + "AND password =" + Hashing.sha(user.getPassword());
+      // Build the query for DB - can now take stored passwords which are hashed and start data which aren't hashed
+      String sql = "SELECT email, password FROM cbsexam.user where email ='" + user.getEmail() + "' AND (password = '" + Hashing.sha(user.getPassword()) + "' OR password = '" + user.getPassword() + "')";
 
       // Actually do the query
       ResultSet rs = dbCon.query(sql);

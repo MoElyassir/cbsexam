@@ -25,6 +25,7 @@ public class UserEndpoints {
   @Path("/{idUser}")
   public Response getUser(@PathParam("idUser") int idUser) {
 
+
     // Use the ID to get the user from the controller.
     User user = UserController.getUser(idUser);
 
@@ -82,7 +83,7 @@ public class UserEndpoints {
     }
   }
 
-  // TODO: Make the system able to login users and assign them a token to use throughout the system. (FIXED - Need to check if it works properly)
+  // TODO: Make the system able to login users and assign them a token to use throughout the system. (FIXED - Works now, checked in postman. Had error with SQL statement)
   @POST
   @Path("/login")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -100,7 +101,7 @@ public class UserEndpoints {
         return Response.status(400).entity("Could not login").build();
       }
     }catch (Exception ex){
-      System.out.println(ex.getMessage());
+      System.out.println("Something went wrong" + ex.getMessage());
 
     }
     return null;
