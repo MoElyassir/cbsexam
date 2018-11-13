@@ -1,5 +1,6 @@
 package controllers;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -177,33 +178,29 @@ public class UserController {
                       rs.getString("email"),
                       rs.getLong("created_at"));
 
+              String token = null;
 
               try {
                   // Creating and signing the token - Consider if the RSA is more secure to use as it is asymetric and has different keys
                   Algorithm algorithm = Algorithm.HMAC256("secret");
-                  String token = JWT.create()
-                          .withIssuer("auth0")
-                          .withClaim("userId", loginUser.id)
-                          .sign(algorithm);
+                  token = JWT.create().withIssuer("auth0").withClaim("userId", loginUser.id).sign(algorithm);
               } catch (JWTCreationException exception){
                   //Invalid Signing configuration / Couldn't convert Claims.
                   System.out.println("Something went wrong" + exception.getMessage());
               }
 
               // Verifying the token
-              String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJpc3MiOiJhdXRoMCJ9.AbIJTDMFc7yUa5MhvcP03nJPyCPzZtQcGEp-zWfOkEE";
+
+
               try {
                   Algorithm algorithm = Algorithm.HMAC256("secret");
-                  JWTVerifier verifier = JWT.require(algorithm)
-                          .withIssuer("auth0")
-                          .build(); //Reusable verifier instance
+                  JWTVerifier verifier = JWT.require(algorithm) .withIssuer("auth0").build(); //Reusable verifier instance
                   DecodedJWT jwt = verifier.verify(token);
               } catch (JWTVerificationException exception1){
                   //Invalid signature/claims
 
-                  System.out.println("Something went wrong with verifying the token" + exception1.getMessage());
+                  System.out.println("Something went wrong with verifying the token - " + exception1.getMessage());
               }
-
 
               // Return the token directly
               return token;
@@ -220,5 +217,17 @@ public class UserController {
 
 
   }
+
+ /* public static String deleteUser (User user){
+
+       // Check for connection
+       if (dbCon == null) {
+           dbCon = new DatabaseController();
+       }
+
+       String sql = "DELETE "
+
+  }*/
+
 
 }
