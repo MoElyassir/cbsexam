@@ -2,6 +2,7 @@ package controllers;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
@@ -66,7 +67,7 @@ public class UserController {
       System.out.println(ex.getMessage());
     }
 
-    // Return null
+      // Return null
     return user;
   }
 
@@ -105,10 +106,11 @@ public class UserController {
         users.add(user);
       }
     } catch (SQLException ex) {
-      System.out.println(ex.getMessage());
+        System.out.println(ex.getMessage());
+
     }
 
-    // Return the list of users
+      // Return the list of users
     return users;
   }
 
@@ -162,6 +164,9 @@ public class UserController {
       }
 
       // Build the query for DB - can now take stored passwords which are hashed and start data which aren't hashed
+      //SQL 1 som getter user from users where email = xxx
+      //salt = user.getSalt();
+      //andet sql:
       String sql1 = "SELECT * FROM cbsexam.user where email ='" + user.getEmail() + "' AND (password = '" + Hashing.sha(user.getPassword()) + "' OR password = '" + user.getPassword() + "')";
 
       // Actually do the query

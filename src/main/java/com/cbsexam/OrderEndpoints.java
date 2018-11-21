@@ -2,6 +2,8 @@ package com.cbsexam;
 
 import com.google.gson.Gson;
 import controllers.OrderController;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -56,7 +58,7 @@ public class OrderEndpoints {
   @POST
   @Path("/")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response createOrder(String body) {
+  public Response createOrder(String body) throws NoSuchAlgorithmException {
 
     // Read the json from body and transfer it to a order class
     Order newOrder = new Gson().fromJson(body, Order.class);

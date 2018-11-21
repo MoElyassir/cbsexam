@@ -3,13 +3,15 @@ package utils;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 import model.User;
 import org.bouncycastle.util.encoders.Hex;
 
 
 public final class Hashing {
 
-
+    static String salt = Config.getSalt();
 
 
     // TODO: You should add a salt and make this secure
@@ -48,36 +50,36 @@ public final class Hashing {
 
     // TODO: You should add a salt and make this secure - FIX
 
+
     public static String sha(String rawString) {
-        if (rawString == "null") {
-            return "null";
-            } else
-                try {
-                    // We load the hashing algoritm we wish to use.
-                    MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
-                    // Adding the createdTime will give each password a unique hash even if different users have the same password
-                    // Problem with start data with the same password as createdTime is the same
+            try {
+                // We load the hashing algoritm we wish to use.
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
-                    rawString = rawString + User.getCreatedTime();
+                // Adding the createdTime will give each password a unique hash even if different users have the same password
+                // Problem with start data with the same password as createdTime is the same
 
-                    // We convert to byte array
-                    byte[] hash = digest.digest(rawString.getBytes(StandardCharsets.UTF_8));
+                rawString = rawString + salt;
 
-                    // We create the hashed string
-                    String sha256hex = new String(Hex.encode(hash));
+                // We convert to byte array
+                byte[] hash = digest.digest(rawString.getBytes(StandardCharsets.UTF_8));
 
-                    // And return the string
-                    return sha256hex;
+                // We create the hashed string
+                String sha256hex = new String(Hex.encode(hash));
 
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
+                // And return the string
+                return sha256hex;
 
-                } return rawString;
-        }
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
 
-
+            } return rawString;
     }
+
+
+}
+
 
 
 

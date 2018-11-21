@@ -62,7 +62,7 @@ public class UserEndpoints {
   @POST
   @Path("/")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response createUser(String body) {
+  public Response createUser(String body){
 
     // Read the json from body and transfer it to a user class
     User newUser = new Gson().fromJson(body, User.class);
@@ -87,7 +87,7 @@ public class UserEndpoints {
   @POST
   @Path("/login")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response loginUser(String body) {
+  public Response loginUser(String body){
 
     User user = new Gson().fromJson(body, User.class);
 

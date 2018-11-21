@@ -2,6 +2,7 @@ package model;
 
 import utils.Hashing;
 
+
 public class User {
 
   public int id;
@@ -59,10 +60,10 @@ public class User {
   }
 
   public void setPassword(String password) {
-    this.password = Hashing.sha(password);
+      this.password = Hashing.sha(password);
   }
 
-  public static long getCreatedTime() {
+  public long getCreatedTime() {
     return createdTime;
   }
 

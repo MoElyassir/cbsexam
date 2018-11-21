@@ -125,7 +125,11 @@ public class ProductController {
     } catch (SQLException ex) {
       System.out.println(ex.getMessage());
     }
-
+    System.out.println("database getting products");
+    //get products --> Udskrive ovenstående og returne products fra databasen.
+    //get products --> Ovenstående skal ikke udskrives, og products bliver dermed returneret fra cache
+    //add product --> Opdatere databasen med det nye produkt, og du forceupdate (true). Udskrive ovenstående linje
+    //get products --> skal den ikke udskrive ovenstående, og du skal checke at det produkt du lige har tilfjet også returneres.
     return products;
   }
 
