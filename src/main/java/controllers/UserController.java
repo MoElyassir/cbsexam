@@ -166,7 +166,7 @@ public class UserController {
       // Build the query for DB - can now take stored passwords which are hashed and start data which aren't hashed
       //SQL 1 som getter user from users where email = xxx
       //salt = user.getSalt();
-      //andet sql:
+      //andet sql:1
       String sql1 = "SELECT * FROM cbsexam.user where email ='" + user.getEmail() + "' AND (password = '" + Hashing.sha(user.getPassword()) + "' OR password = '" + user.getPassword() + "')";
 
       // Actually do the query
@@ -190,7 +190,7 @@ public class UserController {
               try {
                   // Creating and signing the token - Consider if the RSA is more secure to use as it is asymetric and has different keys
                   Algorithm algorithm = Algorithm.HMAC256("secret");
-                  token = JWT.create().withIssuer("auth0").withClaim("userId", loginUser.id).sign(algorithm);
+                  token = JWT.create().withIssuer("auth0").withClaim("userId", loginUser.getId()).sign(algorithm);
               } catch (JWTCreationException exception){
                   //Invalid Signing configuration / Couldn't convert Claims.
                   System.out.println("Something went wrong" + exception.getMessage());
@@ -213,7 +213,7 @@ public class UserController {
               try {
 
 
-                      String sql3 = "INSERT INTO tokens (user_id, token) VALUES ('" + loginUser.getId() + "', '" + token + "')";
+                      String sql3 = "UPDATE user SET token = '" + token + "' WHERE email ='" + user.getEmail() + "' AND (password = '" + Hashing.sha(user.getPassword()) + "' OR password = '" + user.getPassword() + "')" ;
 
                       dbCon.insert(sql3);
 
