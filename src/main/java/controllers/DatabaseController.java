@@ -93,7 +93,7 @@ public class DatabaseController {
     try {
       // Build the statement up in a safe way
       PreparedStatement statement =
-          connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+              connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
       // Execute query
       result = statement.executeUpdate();
@@ -108,6 +108,54 @@ public class DatabaseController {
     }
 
     // Return the resultset which at this point will be null
+    return result;
+  }
+
+  public int deleteUser(String sql) {
+
+    int result = -2;
+
+    if (connection == null)
+      connection = getConnection();
+
+    try {
+      PreparedStatement statement = connection.prepareStatement(sql);
+      result = statement.executeUpdate();
+
+    } catch (SQLException e) {
+      System.out.println("Error: " + e);
+
+    }
+
+    return result;
+
+  }
+
+  public int updateUser(String sql) {
+
+    int result = 0;
+
+    if (connection == null)
+      connection = getConnection();
+
+    try {
+      // Build the statement up in a safe way
+      PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+      // Execute query
+      result = statement.executeUpdate();
+
+      // Get our key back in order to update the user
+      ResultSet generatedKeys = statement.getGeneratedKeys();
+
+      if (generatedKeys.next()) {
+        return generatedKeys.getInt(1);
+      }
+
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
     return result;
   }
 }

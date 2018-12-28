@@ -1,13 +1,13 @@
 package com.cbsexam;
 
+import cache.UserCache;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.Gson;
 import controllers.UserController;
 import java.util.ArrayList;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import model.User;
@@ -16,6 +16,8 @@ import utils.Log;
 
 @Path("user")
 public class UserEndpoints {
+
+  UserCache userCache = new UserCache();
 
   /**
    * @param idUser
@@ -107,16 +109,39 @@ public class UserEndpoints {
     return null;
 
   }
-
   // TODO: Make the system able to delete users
-  public Response deleteUser(String x) {
 
-    // Return a response with status 200 and JSON as type
-    return Response.status(400).entity("Endpoint not implemented yet").build();
+  @DELETE
+  @Path("/delete")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response deleteUser(String body) {
+
+    User user = new Gson().fromJson(body, User.class);
+
+    boolean userWasDeleted = UserController.delete(user);
+
+    String json = new Gson().toJson("User with ID: " + user.getId() + " was deleted ");
+
+
+    if (userWasDeleted == true) {
+
+      return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(json).build();
+
+    } else {
+      return Response.status(400).entity("Could not delete user").build();
+
+    }
+
   }
 
+
+
+
   // TODO: Make the system able to update users
-  public Response updateUser(String x) {
+  @POST
+  @Path("/update")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response updateUser(String body) {
 
     // Return a response with status 200 and JSON as type
     return Response.status(400).entity("Endpoint not implemented yet").build();

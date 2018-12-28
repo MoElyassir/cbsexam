@@ -12,6 +12,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mysql.cj.jdbc.exceptions.SQLError;
@@ -56,7 +57,8 @@ public class UserController {
                 rs.getString("last_name"),
                 rs.getString("password"),
                 rs.getString("email"),
-                rs.getLong("created_at"));
+                rs.getLong("created_at"),
+                    rs.getString("token"));
 
         // return the create object
         return user;
@@ -100,7 +102,8 @@ public class UserController {
                 rs.getString("last_name"),
                 rs.getString("password"),
                 rs.getString("email"),
-                rs.getLong("created_at"));
+                rs.getLong("created_at"),
+                    rs.getString("token"));
 
         // Add element to list
         users.add(user);
@@ -116,44 +119,46 @@ public class UserController {
 
 
 
-  public static User createUser(User user) {
+    public static User createUser(User user) {
 
-    // Write in log that we've reach this step
-    Log.writeLog(UserController.class.getName(), user, "Actually creating a user in DB", 0);
+        // Write in log that we've reach this step
+        Log.writeLog(UserController.class.getName(), user, "Actually creating a user in DB", 0);
 
-    // Set creation time for user.
-    user.setCreatedTime(System.currentTimeMillis() / 1000L);
+        // Set creation time for user.
+        user.setCreatedTime(System.currentTimeMillis() / 1000L);
 
-    // Check for DB Connection
-    if (dbCon == null) {
-      dbCon = new DatabaseController();
+        // Check for DB Connection
+        if (dbCon == null) {
+            dbCon = new DatabaseController();
+        }
+
+        // Insert the user in the DB
+        int userID = dbCon.insert(
+                "INSERT INTO user(first_name, last_name, password, email, created_at, token) VALUES('"
+                        + user.getFirstname()
+                        + "', '"
+                        + user.getLastname()
+                        + "', '"
+                        + user.getPassword()
+                        + "', '"
+                        + user.getEmail()
+                        + "', '"
+                        + user.getCreatedTime()
+                        + "', '"
+                        + user.getToken()
+                        + "')");
+
+        if (userID != 0) {
+            //Update the userid of the user before returning
+            user.setId(userID);
+        } else{
+            // Return null if user has not been inserted into database
+            return null;
+        }
+
+        // Return user
+        return user;
     }
-
-    // Insert the user in the DB
-    int userID = dbCon.insert(
-        "INSERT INTO user(first_name, last_name, password, email, created_at) VALUES('"
-            + user.getFirstname()
-            + "', '"
-            + user.getLastname()
-            + "', '"
-            + user.getPassword()
-            + "', '"
-            + user.getEmail()
-            + "', "
-            + user.getCreatedTime()
-            + ")");
-
-    if (userID != 0) {
-      //Update the userid of the user before returning
-      user.setId(userID);
-    } else{
-      // Return null if user has not been inserted into database
-      return null;
-    }
-
-    // Return user
-    return user;
-  }
 
     // REMEMBER!! - Check again for improvements (Will not block an uncreated user from login - check again!!!)
   public static String checkUser (User user){
@@ -183,7 +188,8 @@ public class UserController {
                       rs.getString("last_name"),
                       rs.getString("password"),
                       rs.getString("email"),
-                      rs.getLong("created_at"));
+                      rs.getLong("created_at"),
+                      rs.getString("token"));
 
               String token = null;
 
@@ -238,16 +244,124 @@ public class UserController {
 
   }
 
- /* public static String deleteUser (User user){
+    public static boolean delete(User user) {
 
-       // Check for connection
-       if (dbCon == null) {
-           dbCon = new DatabaseController();
-       }
+        if (dbCon == null) {
+            dbCon = new DatabaseController();
+        }
 
-       String sql = "DELETE "
+        String sql = "SELECT * FROM cbsexam.user WHERE email = '" + user.getEmail() + "' AND (password = '" + Hashing.sha(user.getPassword()) + "' OR password = '" + user.getPassword() + "')";
+        ResultSet rs = dbCon.query(sql);
+        User userToDelete = null;
 
-  }*/
 
+        try {
+
+            if (rs.next()) {
+
+                userToDelete = new User(
+                        rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getLong("created_at"),
+                        rs.getString("token"));
+
+
+                if (userToDelete.getToken() != null) {
+
+
+                    Log.writeLog(UserController.class.getName(), null, "Deleting user with id: " + userToDelete.getId() + " and token: " + userToDelete.getToken(), 0);
+
+                    String sql2 = "DELETE FROM cbsexam.user WHERE token = '" + userToDelete.getToken() + "'";
+
+
+                    int i = dbCon.deleteUser(sql2);
+
+                    if (i == 1) {
+                        Log.writeLog(UserController.class.getName(), null, "User with id: " + userToDelete.getId() + " was deleted; " + i + " row was affected", 0);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    System.out.println("Token didn't match");
+                }
+
+            } else {
+                System.out.println("No user found");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        return Boolean.parseBoolean(null);
+    }
+
+        //not done yet 
+    public static User updateUser (User user){
+
+      if (dbCon == null) {
+          dbCon = new DatabaseController();
+      }
+        String sql1 = "SELECT * FROM cbsexam.user where email ='" + user.getEmail() + "' AND (password = '" + Hashing.sha(user.getPassword()) + "' OR password = '" + user.getPassword() + "')";
+
+        // Actually do the query
+        ResultSet rs = dbCon.query(sql1);
+        User userToUpdate = null;
+
+        try {
+            // Get first object, since we only have one
+            if (rs.next()) {
+
+                userToUpdate = new User(
+                        rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getLong("created_at"),
+                        rs.getString("token"));
+
+                if (userToUpdate.getId() != 0)
+                {
+
+                    String sql2 = "UPDATE user SET (first_name, last_name, password, email) VALUES('"
+                            + user.getFirstname()
+                            + "', '"
+                            + user.getLastname()
+                            + "', '"
+                            + user.getPassword()
+                            + "', '"
+                            + user.getEmail()
+                            + "')";
+
+                    int i = dbCon.updateUser(sql2);
+
+                    if (i == 1) {
+                        System.out.println("User with ID " + userToUpdate.getId() + " was updated; " + i + " row was affected");
+                    }
+                    else {
+                        System.out.println("Something went wrong with the update execution");
+                    }
+
+
+                }else {
+                    System.out.println("No such user");
+                }
+
+                }else {
+                System.out.println("");
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return userToUpdate;
+
+    }
 
 }
+
