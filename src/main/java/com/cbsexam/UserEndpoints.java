@@ -41,7 +41,9 @@ public class UserEndpoints {
     return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(json).build();
   }
 
-  /** @return Responses */
+  /**
+   * @return Responses
+   */
   @GET
   @Path("/")
   public Response getUsers() {
@@ -64,7 +66,7 @@ public class UserEndpoints {
   @POST
   @Path("/")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response createUser(String body){
+  public Response createUser(String body) {
 
     // Read the json from body and transfer it to a user class
     User newUser = new Gson().fromJson(body, User.class);
@@ -89,27 +91,27 @@ public class UserEndpoints {
   @POST
   @Path("/login")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response loginUser(String body){
+  public Response loginUser(String body) {
 
     User user = new Gson().fromJson(body, User.class);
 
     String token = UserController.checkUser(user);
 
-    try{
-      if (token != null){
+    try {
+      if (token != null) {
         // Return a response with status 200 and JSON as type
         return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(token).build();
-      }else {
+      } else {
         return Response.status(400).entity("Could not login").build();
       }
-    }catch (Exception ex){
+    } catch (Exception ex) {
       System.out.println("Something went wrong" + ex.getMessage());
 
     }
     return null;
 
   }
-  // TODO: Make the system able to delete users
+  // TODO: Make the system able to delete users - FIX
 
   @DELETE
   @Path("/delete")
@@ -120,7 +122,9 @@ public class UserEndpoints {
 
     boolean userWasDeleted = UserController.delete(user);
 
-    String json = new Gson().toJson("User with ID: " + user.getId() + " was deleted ");
+
+
+    String json = new Gson().toJson("User with ID: " + userWasDeleted + " was deleted ");
 
 
     if (userWasDeleted == true) {
@@ -135,15 +139,25 @@ public class UserEndpoints {
   }
 
 
-
-
-  // TODO: Make the system able to update users
+  // TODO: Make the system able to update users - FIX
   @POST
   @Path("/update")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response updateUser(String body) {
 
-    // Return a response with status 200 and JSON as type
-    return Response.status(400).entity("Endpoint not implemented yet").build();
+    User user = new Gson().fromJson(body, User.class);
+
+    User userWasUpdated = UserController.updateUser(user);
+
+    String json = new Gson().toJson("User with ID: " + UserController.updateUser(user).getId() + " was updated ");
+
+
+    if (userWasUpdated != null) {
+
+      return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(json).build();
+    } else {
+      // Return a response with status 200 and JSON as type
+      return Response.status(400).entity("Could not update user").build();
+    }
   }
 }

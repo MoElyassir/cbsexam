@@ -300,7 +300,7 @@ public class UserController {
         return Boolean.parseBoolean(null);
     }
 
-        //not done yet 
+        //Works, but might need an update
     public static User updateUser (User user){
 
       if (dbCon == null) {
@@ -328,15 +328,7 @@ public class UserController {
                 if (userToUpdate.getId() != 0)
                 {
 
-                    String sql2 = "UPDATE user SET (first_name, last_name, password, email) VALUES('"
-                            + user.getFirstname()
-                            + "', '"
-                            + user.getLastname()
-                            + "', '"
-                            + user.getPassword()
-                            + "', '"
-                            + user.getEmail()
-                            + "')";
+                    String sql2 = "UPDATE user SET first_name ='" + user.getFirstname() + "', last_name ='" + user.getLastname()+ "', password ='" + user.getPassword() + "' WHERE token ='" + userToUpdate.getToken() + "'";
 
                     int i = dbCon.updateUser(sql2);
 
@@ -349,11 +341,11 @@ public class UserController {
 
 
                 }else {
-                    System.out.println("No such user");
+                    System.out.println("Could not collect data");
                 }
 
                 }else {
-                System.out.println("");
+                System.out.println("No such user");
             }
         }catch (SQLException e) {
             e.printStackTrace();
