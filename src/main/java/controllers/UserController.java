@@ -306,7 +306,9 @@ public class UserController {
       if (dbCon == null) {
           dbCon = new DatabaseController();
       }
-        String sql1 = "SELECT * FROM cbsexam.user where email ='" + user.getEmail() + "' AND (password = '" + Hashing.sha(user.getPassword()) + "' OR password = '" + user.getPassword() + "')";
+        String sql1 = "SELECT * FROM cbsexam.user where email ='" + user.getEmail() +
+                "' AND (password = '" + Hashing.sha(user.getPassword()) +
+                "' OR password = '" + user.getPassword() + "')";
 
         // Actually do the query
         ResultSet rs = dbCon.query(sql1);

@@ -1,9 +1,6 @@
 package com.cbsexam;
 
 import cache.UserCache;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.Gson;
 import controllers.UserController;
 import java.util.ArrayList;
@@ -43,7 +40,7 @@ public class UserEndpoints {
       return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(json).build();
 
     }else {
-      return Response.status(400).entity("Something went wrong").build();
+      return Response.status(400).entity("User not found").build();
 
     }
   }
@@ -163,7 +160,7 @@ public class UserEndpoints {
 
       return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(json).build();
     } else {
-      // Return a response with status 200 and JSON as type
+
       return Response.status(400).entity("Could not update user").build();
     }
   }
