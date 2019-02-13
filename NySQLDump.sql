@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.12, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
--- Host: localhost    Database: cbsexam
+-- Host: 127.0.0.1    Database: cbsexam
 -- ------------------------------------------------------
--- Server version	8.0.12
+-- Server version	5.7.21
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
- SET NAMES utf8mb4 ;
+/*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `address`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `address` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) COLLATE utf8_danish_ci NOT NULL,
@@ -49,7 +49,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `line_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `line_item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `product_id` int(10) unsigned NOT NULL,
@@ -77,7 +77,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `orders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `orders` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
@@ -107,7 +107,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `product` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `product_name` varchar(255) COLLATE utf8_danish_ci NOT NULL,
@@ -138,7 +138,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `first_name` varchar(255) COLLATE utf8_danish_ci NOT NULL,
@@ -146,9 +146,11 @@ CREATE TABLE `user` (
   `password` varchar(255) COLLATE utf8_danish_ci NOT NULL,
   `email` varchar(255) COLLATE utf8_danish_ci NOT NULL,
   `created_at` int(11) unsigned NOT NULL,
+  `token` varchar(255) COLLATE utf8_danish_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci;
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +159,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Henrik','Thorn','abc','henrik@abc.dk',0),(2,'Peter','Pan','ABCD','ha@as.dk',0),(3,'Henrik','Thorn','abc','henrik@abc.dk',1539260226),(4,'Henrik','Thorn','abc','henrik@abc.dk',1539260302),(5,'Henrik','Thorn','abc','henrik@abc.dk',1539260590),(6,'Henrik','Thorn','900150983cd24fb0d6963f7d28e17f72','henrik@abc.dk',1539260683),(7,'Henrik','Thorn','ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad','henrik@abc.dk',1539260935),(8,'Henrik','Thorn','ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad','henrik@abc.dk',1539277503),(9,'Henrik','Thorn','ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad','henrik@abc.dk',1539277743),(10,'Henrik','Thorn','ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad','henrik@abc.dk',1539277791),(11,'Henrik','Thorn','ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad','henrik@abc.dk',1539277902),(12,'Henrik','Thorn','ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad','henrik@abc.dk',1539335661),(13,'null','null','null','null',1539338689);
+INSERT INTO `user` VALUES (1,'Henrik','Thorn','abc','henrik@abc.dk',0,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJJZCI6MX0.uP0nQHU06dLjJg6QiR6nabo2hcT9VGP4jq2r3BoviKw'),(2,'Peter','Pan','ABCD','ha@as.dk',0,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJJZCI6Mn0.CQLnj6g1XRM9KFWo2-Su7LlgW0vvEi3la-SeAkg-SYw'),(25,'mo','null','83ac93dbad415133db1633d1c45f15f82e043bdb268f55e29063007ee9d92a12','m22g22212o@abc.dk',1542639939,NULL),(27,'mo','null','eb76e2254ff1cb43115299491e1906fbf39921b384b983cf529ebe674d9915c1','m22g222khj12o@abc.dk',1542640099,NULL),(28,'mo','null','222ed92dc0674bbfdad05458917546ba2c09e7a79c5f686b71dc4335de9b8901','m22g222khj1h2o@abc.dk',1542640209,NULL),(29,'mo','null','f1ee067838cfe92e751feb8e0ba506955981a3e8d9e47ab7707346f42ad88a0a','m22g222khj1hf2o@abc.dk',1542792249,NULL),(32,'fuck2','dig','ac20b161a1682a50901a70d17c30a22617462ac3bb8da89a9b0703b141fb6c19','fuckdig',1548211041,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJJZCI6MzJ9.uqHiv8K6U3rOtJ6YNFABoxu5HZAdNrtGiikzwWOlSLU'),(34,'null','null','0cf36c50df4b033782cf20115100cd365619a1f3223baf0ea4a8bba4af899e2e','fuckdig2',1548281981,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJJZCI6MzR9.TyMidTQIDlfSt2Z_6NIwsM1-rZMDaoLscnaHYWEyXJI'),(35,'null','null','0cf36c50df4b033782cf20115100cd365619a1f3223baf0ea4a8bba4af899e2e','fuckdig3',1548281989,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJJZCI6MzV9.FI5AeN0-KahaltdrHhEeOlxRCPugMqxCE_gqJkv3Qnc'),(36,'null','null','0cf36c50df4b033782cf20115100cd365619a1f3223baf0ea4a8bba4af899e2e','fuckdig4',1548281997,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJJZCI6MzZ9._S7ZnP0_T8HTSqkc6UlC0nRW-hOO86LzaWWDw6hNzhc'),(38,'null','null','4f5f551c0110cc620a896f157c6fcb8853f4a022657b97c21323f6238febdd22','fuckdig5',1548282008,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJJZCI6Mzh9.oJxffi_N2TWxON3oCdsD7-I9R7k4mQjaS2b2EoTwhTE'),(39,'null','null','3fbdb0472bcf9f8f37258e89039d8127c5bf367361a6c36cdb265f860194d9d5','fuckdig6',1548282018,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJJZCI6Mzl9.LHrwD-l74b0UjE8gWfXlrwE1Z4MqgJr7rbmAR4lUb5o'),(40,'null','null','4f5f551c0110cc620a896f157c6fcb8853f4a022657b97c21323f6238febdd22','fuckdig78',1548698156,'null'),(42,'null','null','0cf36c50df4b033782cf20115100cd365619a1f3223baf0ea4a8bba4af899e2e','fuckdig798',1548698167,'null');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -170,4 +172,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-10-13 23:10:28
+-- Dump completed on 2019-02-11 14:19:28
